@@ -25,7 +25,7 @@ def get_imports(path: Path) -> dict[str, str]:
 class Env:
     def __init__(self) -> None:
         self.names_to_paths: dict[str, Path] = {}
-        self._name_cache: dict[Path, dict[str, str]] = {}
+        self._name_cache: dict[str, dict[str, str]] = {}
 
     def add_to_import_path(self, name: str, path: Path) -> None:
         self.names_to_paths[name] = path
@@ -47,11 +47,11 @@ class Env:
                 if not name:
                     # Direct module reference
                     return mod
-                if f not in self._name_cache:
-                    self._name_cache[f] = get_imports(f)
+                if mod not in self._name_cache:
+                    self._name_cache[mod] = get_imports(f)
                 try:
                     real_fqn, mod2, remainder = _match_longest_dotted(
-                        self._name_cache[f], name
+                        self._name_cache[mod], name
                     )
                 except NoMatch:
                     # Welp, maybe it doesn't exist, but it at least should
@@ -121,13 +121,3 @@ def join(a: Optional[T], b: Optional[T]) -> T:
         return b
     else:
         raise Exception
-
-
-if __name__ == "__main__":
-    import sys
-
-    e = Env()
-    e.add_site_packages(Path("/usr/lib/python3.13"))
-    e.add_site_packages(Path(".venv/lib/python3.13/site-packages"))
-    e.add_to_import_path("static_qualname", Path("static_qualname"))
-    print(e.real_qualname(sys.argv[1]))
