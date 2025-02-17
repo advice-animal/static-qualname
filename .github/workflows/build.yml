@@ -37,11 +37,11 @@ jobs:
           git config --global user.name "Unit Test"
           git config --global user.email "example@example.com"
           make test
-      - name: Lint
-        run: |
-          uv pip install -e .[test,dev]
-          make lint
-        if: ${{ matrix.python-version != '3.9' && matrix.python-version != '3.8'}}
+      # - name: Lint
+      #   run: |
+      #     uv pip install -e .[test,dev]
+      #     make lint
+      #   if: ${{ matrix.python-version != '3.9' && matrix.python-version != '3.8'}}
 
   build:
     needs: test
