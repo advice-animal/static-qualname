@@ -13,6 +13,12 @@ def test_normal_import(tmp_path):
     assert get_imports(f) == {"a": "a", "b.c": "b.c"}
 
 
+def test_as_import(tmp_path):
+    f = tmp_path / "foo.py"
+    f.write_text("from a import b as c\n")
+    assert get_imports(f) == {"c": "a.b"}
+
+
 def test_mixed_imports_last_one_wins(tmp_path):
     f = tmp_path / "foo.py"
     f.write_text("import a\nfrom foo.bar import a\n")
