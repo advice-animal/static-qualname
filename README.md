@@ -11,5 +11,5 @@
 or
 
 ```sh
-python -m static_qualname http.server.HTTPStatuc
+python -m static_qualname http.server.HTTPStatus
 ```
