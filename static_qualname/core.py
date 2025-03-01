@@ -14,11 +14,13 @@ def get_imports(path: Path) -> dict[str, str]:
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for subnode in node.names:
-                imports[subnode.name] = subnode.name
+                imports[subnode.asname or subnode.name] = subnode.name
         elif isinstance(node, ast.ImportFrom):
             if node.level == 0:
                 for subnode in node.names:
-                    imports[subnode.name] = f"{node.module}.{subnode.name}"
+                    imports[subnode.asname or subnode.name] = (
+                        f"{node.module}.{subnode.name}"
+                    )
     return imports
 
 
@@ -36,7 +38,7 @@ class Env:
             if e.is_dir() and "." not in e.name:
                 self.add_to_import_path(e.name, e)
             elif e.suffix == ".py":
-                self.add_to_import_path(e.name, e)
+                self.add_to_import_path(e.name[:-3], e)
 
     def real_qualname(self, fqn: str) -> str:
         # TODO detect cycles
